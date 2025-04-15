@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css">
+    <title>QR Code Generator</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="box">
+        <div class="qr-header">
+          <h1>Generate QR Code</h1>
+          <input
+            type="text"
+            placeholder="Type your text or URL"
+            id="qr-text"
+          />
+          <div>
+            <label for="sizes">Select Size:</label>
+            <select id="sizes">
+              <option value="100">100x100</option>
+              <option value="200" selected>200x200</option>
+              <option value="300">300x300</option>
+            </select>
+          </div>
+        </div>
+        <div class="qr-body"></div>
+        <div class="qr-footer">
+          <a href="#" id="generateBtn">Generate</a>
+          <a href="#" id="downloadBtn" download="QR_Code.png">Download</a>
+        </div>
+      </div>
+
+      <footer class="footer-section">
+        <div class="media-card">
+          <p class="copyrightText">
+            &copy; Samuel's Tech., 2024-2025
+          </p>
+        </div>
+        <p class="footer-content">
+          “GENERATE QR CODE" is owned & managed by "Samuel's Tech."
+        </p>
+      </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+      const qrText = document.getElementById("qr-text");
+      const sizes = document.getElementById("sizes");
+      const generateBtn = document.getElementById("generateBtn");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const qrContainer = document.querySelector(".qr-body");
+
+      let size = sizes.value;
+
+      generateBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        isEmptyInput();
+      });
+
+      sizes.addEventListener("change", (e) => {
+        size = e.target.value;
+        isEmptyInput();
+      });
+
+      downloadBtn.addEventListener("click", () => {
+        let img = document.querySelector(".qr-body img");
+
+        if (img !== null) {
+          let imgAttr = img.getAttribute("src");
+          downloadBtn.setAttribute("href", imgAttr);
+        } else {
+          let canvas = document.querySelector("canvas");
+          if (canvas) {
+            downloadBtn.setAttribute("href", canvas.toDataURL());
+          }
+        }
+      });
+
+      function isEmptyInput() {
+        if (qrText.value.trim().length > 0) {
+          generateQRCode();
+        } else {
+          alert("Enter the text or URL to generate your QR code");
+        }
+      }
+
+      function generateQRCode() {
+        qrContainer.innerHTML = "";
+        new QRCode(qrContainer, {
+          text: qrText.value,
+          height: size,
+          width: size,
+          colorLight: "#fff",
+          colorDark: "#000",
+        });
+      }
+    </script>
+  </body>
+</html>
